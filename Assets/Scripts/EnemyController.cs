@@ -11,7 +11,7 @@ public class EnemyController : MonoBehaviour
     private AudioManager _audioManager;
     private EnemyManager _enemyManager;
     private SpriteRenderer _spriteRenderer;
-
+    private int flipX;
     void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
@@ -22,7 +22,8 @@ public class EnemyController : MonoBehaviour
 
     void FixedUpdate()
     {
-        _rb.MovePosition(new Vector2(_rb.position.x - velocity * 0.01f, _rb.position.y));
+        flipX = _spriteRenderer.flipX ? -1 : 1;
+        _rb.MovePosition(new Vector2(_rb.position.x + velocity * 0.01f * flipX, _rb.position.y));
     }
 
     void OnTriggerEnter2D(Collider2D other)
