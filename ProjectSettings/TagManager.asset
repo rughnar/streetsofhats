@@ -4,7 +4,8 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - HatWelder
+  - Stall
+  - HatWielder
   layers:
   - Default
   - TransparentFX

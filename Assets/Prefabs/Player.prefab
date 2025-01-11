@@ -12,6 +12,9 @@ GameObject:
   - component: {fileID: 1767932953806184286}
   - component: {fileID: 4322647478830632106}
   - component: {fileID: -736121592916268037}
+  - component: {fileID: 7124096599047937388}
+  - component: {fileID: 5096680090750669900}
+  - component: {fileID: 805873368109501691}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -74,10 +77,10 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 10
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 4af9485a08e44324492b2f39cffdd448, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 1.83, y: 2.48}
@@ -85,7 +88,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!50 &4322647478830632106
 Rigidbody2D:
   serializedVersion: 4
@@ -112,7 +115,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!70 &-736121592916268037
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -145,6 +148,59 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: 1.24}
   m_Size: {x: 1.83, y: 2.48}
   m_Direction: 0
+--- !u!114 &7124096599047937388
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4524473787232761936}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 611067ec6ec905c4abac213ac8880f34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  velocity: 10
+  moveAudioClip: {fileID: 0}
+--- !u!95 &5096680090750669900
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4524473787232761936}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &805873368109501691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4524473787232761936}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48bf66c5393afc54eb8b7cb04f25e8c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackClip: {fileID: 0}
+  eatTreeClip: {fileID: 0}
+  timeBetweenSteals: 0.3
+  timeBetweenSecures: 0.3
+  timeNecessaryToSteal: 0.2
+  timeNecessaryToSecure: 0.2

@@ -5,8 +5,8 @@ using TMPro;
 public class UIController : MonoBehaviour
 {
     public TMP_Text livesText;
-    public TMP_Text ammoText;
-
+    public TMP_Text scoreText;
+    public TMP_Text multiplierText;
     private Coroutine livesColorChange = null;
     private Coroutine ammoColorChange = null;
 
@@ -45,20 +45,20 @@ public class UIController : MonoBehaviour
 
     public void SetAmmoSilently(int ammo)
     {
-        ammoText.text = "" + ammo;
+        scoreText.text = "" + ammo;
     }
 
     public void IncreaseAmmo(int ammo)
     {
         if (ammoColorChange != null) StopCoroutine(ammoColorChange);
-        ammoColorChange = StartCoroutine(GoFromColorToColorIn(0.2f, Color.green, Color.white, ammoText));
+        ammoColorChange = StartCoroutine(GoFromColorToColorIn(0.2f, Color.green, Color.white, scoreText));
         SetAmmoSilently(ammo);
     }
 
     public void DecreaseAmmo(int ammo)
     {
         if (ammoColorChange != null) StopCoroutine(ammoColorChange);
-        ammoColorChange = StartCoroutine(GoFromColorToColorIn(0.2f, Color.red, Color.white, ammoText));
+        ammoColorChange = StartCoroutine(GoFromColorToColorIn(0.2f, Color.red, Color.white, scoreText));
         SetAmmoSilently(ammo);
     }
 

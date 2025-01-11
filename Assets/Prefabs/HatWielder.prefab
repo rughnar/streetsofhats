@@ -14,8 +14,8 @@ GameObject:
   - component: {fileID: 9215298068270193183}
   - component: {fileID: 4980643155299632278}
   m_Layer: 0
-  m_Name: HatWelder
-  m_TagString: HatWelder
+  m_Name: HatWielder
+  m_TagString: HatWielder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
