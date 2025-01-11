@@ -2,31 +2,29 @@ using UnityEngine.InputSystem;
 using UnityEngine;
 using System.Collections;
 using UnityEngine.Rendering;
+using System.Collections.Generic;
 
 public class PlayerAttack : MonoBehaviour
 {
-    public AudioClip attackClip;
-    public AudioClip eatTreeClip;
+    public AudioClip stealClip;
+    public AudioClip secureClip;
     public float timeBetweenSteals = 0.3f;
     public float timeBetweenSecures = 0.3f;
-    public float timeNecessaryToSteal = 0.2f;
-    public float timeNecessaryToSecure = 0.2f;
     private PlayerInputActions _playerActions;
     private InputAction _steal;
     private InputAction _secure;
-
     private AudioManager _audioManager;
     private Camera _cam;
     private UIController _uiController;
-
     private float lastStealTime = 0f;
     private float lastSecureTime = 0f;
-
     private Coroutine steal;
     private Coroutine secure;
 
     private bool isStealing = false;
     private bool isSecuring = false;
+
+    private HatHolder _hatHolder;
 
     private void Awake()
     {
@@ -34,6 +32,7 @@ public class PlayerAttack : MonoBehaviour
         _audioManager = FindObjectOfType<AudioManager>();
         _cam = FindObjectOfType<Camera>();
         _uiController = FindObjectOfType<UIController>();
+        _hatHolder = GetComponentInChildren<HatHolder>();
     }
 
 
@@ -75,7 +74,7 @@ public class PlayerAttack : MonoBehaviour
             if (other.gameObject.CompareTag("HatWielder") && !isStealing)
             {
                 isStealing = true;
-                steal = StartCoroutine(Steal());
+                steal = StartCoroutine(Steal(other.gameObject));
 
             }
         }
@@ -104,13 +103,13 @@ public class PlayerAttack : MonoBehaviour
         }
     }
 
-    private IEnumerator Steal()
+    private IEnumerator Steal(GameObject gameObject)
     {
         Debug.Log("Stealing hat");
         yield return new WaitForSeconds(timeBetweenSteals);
         Debug.Log("Hat Stolen");
-        //Hat hat = other.gameObject.GetComponent<HatWielder>().GetStealed();
-        //hatsInPossesions.Add(hat);
+        GameObject hat = gameObject.GetComponent<EnemyController>().GetStealed();
+        _hatHolder.AddHat(hat);
         //UIController.AddToMultiplier(hat.getMultiplier());
         _steal.Reset();
         lastStealTime = Time.fixedTime;
@@ -120,10 +119,10 @@ public class PlayerAttack : MonoBehaviour
     private IEnumerator Secure()
     {
         Debug.Log("Securing hat");
-        yield return new WaitForSeconds(timeNecessaryToSecure);
+        yield return new WaitForSeconds(timeBetweenSecures);
         Debug.Log("Hat Secured");
         lastSecureTime = Time.fixedTime;
-        //Hat hat = other.gameObject.GetComponent<HatWielder>().GetStealed();
+        //GameObject hat = other. <HatWielder>().GetStealed();
         //hatsInPossesions.Add(hat);
         //UIController.AddToMultiplier(hat.getMultiplier());
         _secure.Reset();
@@ -131,45 +130,4 @@ public class PlayerAttack : MonoBehaviour
     }
 
 
-
-
-    /*private void Steal(InputAction.CallbackContext callbackContext)
-    {
-        if (ammo > 0)
-        {
-            GameObject ws = Instantiate(weaponStickPrefab, this.transform.position, Quaternion.identity);
-            Rigidbody2D rb = ws.GetComponent<Rigidbody2D>();//
-            Vector2 mousePos = _cam.ScreenToWorldPoint(Input.mousePosition);
-            Vector2 lookDir = mousePos - rb.position;
-            float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
-            rb.rotation = angle;
-            rb.velocity = lookDir.normalized * throwVelocity;
-            Debug.Log("dispare");
-            ammo -= 1;
-            _uiController.DecreaseAmmo(ammo);
-            _audioManager.PlaySFX(attackClip);
-        }
-        else
-        {
-            Debug.Log("Me quede sin ramitas");
-        }
-
-    }*/
-
-
-    void OnCollisionStay2D(Collision2D other)
-    {
-        /*
-        if (other.gameObject.CompareTag("HatWielder") && _collect.IsPressed() && Time.fixedTime - lastTreeAttack > timeBetweenTreeInteractions)
-        {
-            TreeController tree = other.gameObject.GetComponent<TreeController>();
-            tree.ReduceHealth();
-            ammo += tree.ammoToGive;
-            _uiController.IncreaseAmmo(ammo);
-            _audioManager.PlaySFX(eatTreeClip);
-            lastTreeAttack = Time.fixedTime;
-
-        }
-        */
-    }
 }

@@ -7,6 +7,7 @@ public class EnemyController : MonoBehaviour
     public float velocity = 1f;
     public float hp;
     public AudioClip destroy;
+    public HatHolder _hatHolder;
     private Rigidbody2D _rb;
     private AudioManager _audioManager;
     private EnemyManager _enemyManager;
@@ -18,6 +19,7 @@ public class EnemyController : MonoBehaviour
         _audioManager = FindObjectOfType<AudioManager>();
         _enemyManager = FindObjectOfType<EnemyManager>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
+        _hatHolder = GetComponentInChildren<HatHolder>();
     }
 
     void FixedUpdate()
@@ -64,5 +66,10 @@ public class EnemyController : MonoBehaviour
     void OnBecameInvisible()
     {
         Destroy(this.gameObject);
+    }
+
+    public GameObject GetStealed()
+    {
+        return _hatHolder.RemoveHat();
     }
 }
