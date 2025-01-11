@@ -1,7 +1,6 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
-
 public class PlayerMovement : MonoBehaviour
 {
     public float velocity = 1f;
@@ -42,11 +41,18 @@ public class PlayerMovement : MonoBehaviour
     {
         _moveInput = _playerActions.Player.Move.ReadValue<Vector2>();
 
-        if (_moveInput != Vector2.zero)
+        if (_moveInput.x != 0 || _moveInput.y != 0)
         {
             _rb.MovePosition(new Vector2(_rb.position.x + _moveInput.x * 0.01f * velocity, _rb.position.y + _moveInput.y * 0.01f * velocity));
             _animator.SetBool("isWalking", true);
-            _spriteRenderer.flipX = _moveInput.x > 0;
+            if (_moveInput.x > 0)
+            {
+                _spriteRenderer.flipX = false;
+            }
+            else
+            {
+                _spriteRenderer.flipX = true;
+            }
         }
         else
         {
