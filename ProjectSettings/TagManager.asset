@@ -42,3 +42,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: HatWelders
+    uniqueID: 1367088175
+    locked: 0
+  - name: Player
+    uniqueID: 757614841
+    locked: 0
