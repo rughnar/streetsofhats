@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class PlayerHPController : MonoBehaviour
 {
@@ -13,6 +12,7 @@ public class PlayerHPController : MonoBehaviour
     private Coroutine colorChange;
     private BoxCollider2D boxCollider2D;
     private bool invulnerable = false;
+    private GameManager _gameManager;
 
     void Awake()
     {
@@ -42,7 +42,7 @@ public class PlayerHPController : MonoBehaviour
 
         if (vida <= 0)
         {
-            SceneManager.LoadScene("Score");
+            _gameManager.EndLevel();
         }
     }
 

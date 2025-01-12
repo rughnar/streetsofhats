@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -14,13 +15,14 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject loseScreen;
     [SerializeField] private GameObject winScreen;
     [SerializeField] private GameObject pauseScreen;
-
+    [SerializeField] private GameObject helpMenu;
     [SerializeField] private AudioClip winSound;
     [SerializeField] private AudioClip loseSound;
     [SerializeField] Transform spawnTransform;
     public KeyCode resetKey = KeyCode.R;
     public KeyCode pauseKey = KeyCode.P;
     public KeyCode alternativeResumeKey = KeyCode.Escape;
+    public KeyCode helpKey = KeyCode.H;
     public int firstLevelBuildIndex = 4;
     private bool gameEnded = false;
     private bool gamePaused = false;
@@ -66,6 +68,12 @@ public class GameManager : MonoBehaviour
         }
         tiempoDeJuegoReal += Time.deltaTime;
 
+        if (Input.GetKeyDown(helpKey))
+        {
+            if (helpMenu.activeSelf) helpMenu.SetActive(false);
+            else helpMenu.SetActive(true);
+        }
+
     }
 
     public void LoseGame()
@@ -89,15 +97,16 @@ public class GameManager : MonoBehaviour
 
     public void EndLevel()
     {
-        if (SceneManager.sceneCountInBuildSettings - 1 != SceneManager.GetActiveScene().buildIndex)
+        Score();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        /*if (SceneManager.sceneCountInBuildSettings - 1 != SceneManager.GetActiveScene().buildIndex)
         {
-
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
         else
         {
             WinGame();
-        }
+        }*/
     }
 
     public void WinGame()
@@ -136,9 +145,7 @@ public class GameManager : MonoBehaviour
 
     private void Score()
     {
-        //Formula: (6000 * cantidad de segundos ) - 70 * cantidad de obst�culos chocados
-        string score = ((60 * (int)tiempoDeJuegoReal) - 26 * enemyManager.quantityEnemiesDestroyed).ToString();
-        PlayerPrefs.SetString("score", score);
+        PlayerPrefs.SetString("score", "" + score);
         PlayerPrefs.Save();
     }
 
