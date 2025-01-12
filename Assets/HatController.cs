@@ -6,6 +6,10 @@ public class HatController : MonoBehaviour
 {
     public float multiplierBonus = 0.1f;
     public int scorePoints = 10;
+
+    public int spawnPriority = 100;
+
+    private SpriteRenderer spriteRenderer;
     // Start is called before the first frame update
     void Start()
     {

@@ -80,7 +80,7 @@ public class PlayerAttack : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("Stall"))
+        if (other.gameObject.CompareTag("HatStall"))
         {
             inContactWithStall = true;
         }
@@ -108,7 +108,7 @@ public class PlayerAttack : MonoBehaviour
             isStealing = false;
         }
 
-        if (other.gameObject.CompareTag("Stall"))
+        if (other.gameObject.CompareTag("HatStall"))
         {
             if (isSecuring)
             {

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Stall
   - HatWielder
+  - HatStall
   layers:
   - Default
   - TransparentFX
@@ -48,4 +49,10 @@ TagManager:
     locked: 0
   - name: Player
     uniqueID: 757614841
+    locked: 0
+  - name: New Layer 3
+    uniqueID: 2313242595
+    locked: 0
+  - name: New Layer 4
+    uniqueID: 256114705
     locked: 0
