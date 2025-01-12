@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System.Diagnostics.Tracing;
 
 public class EnemyManager : MonoBehaviour
 {
@@ -10,8 +11,10 @@ public class EnemyManager : MonoBehaviour
     [SerializeField] private List<GameObject> enemyPrefabs;
     [SerializeField] private List<Transform> spawnPoints;
 
+    [SerializeField] private List<HatController> hats;
     //[SerializeField] private int maxEnemiesAtTheSameTime = 999;
     [SerializeField] private float timeBetweenSpawns = 4f;
+
     private GameManager gameManager;
     private int currentEnemiesOnLevel = 0;
     public int quantityEnemiesDestroyed = 0;
@@ -73,6 +76,15 @@ public class EnemyManager : MonoBehaviour
         //int index = Mathf.Abs(Random.Range(0, enemyPrefabs.Count));
         GameObject enemy = Instantiate(GetObjectWithMaxProb(), spawnPoints[Random.Range(0, spawnPoints.Count)].position, Quaternion.identity);
         enemy.GetComponent<EnemyController>().FaceCenter();
+        if (enemy.CompareTag("HatWielder"))
+        {
+            GameObject hat = GetHatWithMaxProb();
+            if (hat != null)
+            {
+                GameObject hat2 = Instantiate(hat, Vector3.zero, Quaternion.identity);
+                enemy.GetComponentInChildren<HatHolder>().AddHat(hat2);
+            }
+        }
     }
     /*
         private void SpawnRandomEnemyRecursively(int minusIndex)
@@ -104,6 +116,24 @@ public class EnemyManager : MonoBehaviour
                 break;
             }
             randomNumber -= enemiesPriority[i];
+        }
+        return myGameObject;
+    }
+
+    GameObject GetHatWithMaxProb()
+    {
+        int totalWeight = hats.Sum(h => h.spawnPriority); // Using LINQ for suming up all the values
+        int randomNumber = rnd.Next(0, totalWeight);
+
+        GameObject myGameObject = null;
+        foreach (HatController hat in hats)
+        {
+            if (randomNumber < hat.spawnPriority)
+            {
+                myGameObject = hat.gameObject;
+                break;
+            }
+            randomNumber -= hat.spawnPriority;
         }
         return myGameObject;
     }

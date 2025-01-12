@@ -28,7 +28,6 @@ public class GameManager : MonoBehaviour
     private AudioManager audioManager;
 
     private EnemyManager enemyManager;
-    private PlayerController playerController;
     private PlayerMovement playerMovement;
     private PlayerAttack playerAttack;
     private UIController uIController;
@@ -44,7 +43,6 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         enemyManager = FindObjectOfType<EnemyManager>();
-        playerController = FindObjectOfType<PlayerController>();
         playerMovement = FindObjectOfType<PlayerMovement>();
         playerAttack = FindObjectOfType<PlayerAttack>();
         uIController = FindObjectOfType<UIController>();
@@ -118,7 +116,6 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 0;
         pauseScreen.SetActive(true);
         gamePaused = true;
-        playerController.enabled = false;
         playerMovement.enabled = false;
         playerAttack.enabled = false;
     }
@@ -128,7 +125,6 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1;
         pauseScreen.SetActive(false);
         gamePaused = false;
-        playerController.enabled = true;
         playerMovement.enabled = true;
         playerAttack.enabled = true;
     }
