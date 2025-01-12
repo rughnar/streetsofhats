@@ -8,7 +8,7 @@ public class UIController : MonoBehaviour
     public TMP_Text scoreText;
     public TMP_Text multiplierText;
     private Coroutine livesColorChange = null;
-    private Coroutine ammoColorChange = null;
+    private Coroutine multiplierColorChange = null;
 
     /*
         public void SetHPBar(float hp)
@@ -42,24 +42,30 @@ public class UIController : MonoBehaviour
     }
 
 
-
-    public void SetAmmoSilently(int ammo)
+    public void SetMultiplierSilently(float multiplier)
     {
-        scoreText.text = "" + ammo;
+        multiplierText.text = multiplier + "x Multiplier";
     }
 
-    public void IncreaseAmmo(int ammo)
+    public void IncreaseMultiplier(float multiplier)
     {
-        if (ammoColorChange != null) StopCoroutine(ammoColorChange);
-        ammoColorChange = StartCoroutine(GoFromColorToColorIn(0.2f, Color.green, Color.white, scoreText));
-        SetAmmoSilently(ammo);
+        if (multiplierColorChange != null) StopCoroutine(multiplierColorChange);
+        multiplierColorChange = StartCoroutine(GoFromColorToColorIn(0.2f, Color.green, Color.white, multiplierText));
+        SetMultiplierSilently(multiplier);
     }
 
-    public void DecreaseAmmo(int ammo)
+    public void DecreaseMultiplier(float multiplier)
     {
-        if (ammoColorChange != null) StopCoroutine(ammoColorChange);
-        ammoColorChange = StartCoroutine(GoFromColorToColorIn(0.2f, Color.red, Color.white, scoreText));
-        SetAmmoSilently(ammo);
+        if (multiplierColorChange != null) StopCoroutine(multiplierColorChange);
+        multiplierColorChange = StartCoroutine(GoFromColorToColorIn(0.2f, Color.red, Color.white, multiplierText));
+        SetMultiplierSilently(multiplier);
+    }
+
+
+
+    public void SetScoreSilently(int score)
+    {
+        scoreText.text = "" + score;
     }
 
 

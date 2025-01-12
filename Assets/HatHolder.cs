@@ -17,13 +17,12 @@ public class HatHolder : MonoBehaviour
         foreach (HatController hc in hatControllers)
         {
             hats.Push(hc);
-            Debug.Log(hats.Count());
         }
     }
 
     public GameObject RemoveHat()
     {
-        if (hats.Count > 1)
+        if (hats.Count > 0)
         {
             return hats.Pop().gameObject;
         }
@@ -39,6 +38,6 @@ public class HatHolder : MonoBehaviour
 
     public Boolean HasHat()
     {
-        return hats.Count > 1;
+        return hats.Count > 0;
     }
 }

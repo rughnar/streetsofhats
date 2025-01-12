@@ -1,5 +1,5 @@
 {
-    "name": "StreetsOfHats",
+    "name": "PlayerInputActions",
     "maps": [
         {
             "name": "Player",
@@ -30,6 +30,15 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Fire2",
+                    "type": "Button",
+                    "id": "3ea28531-64be-49e6-87a7-6a0e559db48d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Hold",
                     "initialStateCheck": false
                 }
             ],
@@ -251,6 +260,17 @@
                     "processors": "",
                     "groups": "XR",
                     "action": "Fire",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "70ea3788-4d80-4966-974a-108520eaba49",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Fire2",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

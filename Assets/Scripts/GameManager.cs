@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -8,7 +9,8 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public float tiempoDeJuegoReal = 0;
-
+    public int score = 0;
+    public float multiplier = 1;
     [SerializeField] private GameObject loseScreen;
     [SerializeField] private GameObject winScreen;
     [SerializeField] private GameObject pauseScreen;
@@ -29,6 +31,7 @@ public class GameManager : MonoBehaviour
     private PlayerController playerController;
     private PlayerMovement playerMovement;
     private PlayerAttack playerAttack;
+    private UIController uIController;
 
 
     // Start is called before the first frame update
@@ -44,6 +47,7 @@ public class GameManager : MonoBehaviour
         playerController = FindObjectOfType<PlayerController>();
         playerMovement = FindObjectOfType<PlayerMovement>();
         playerAttack = FindObjectOfType<PlayerAttack>();
+        uIController = FindObjectOfType<UIController>();
     }
 
     // Update is called once per frame
@@ -140,6 +144,18 @@ public class GameManager : MonoBehaviour
         string score = ((60 * (int)tiempoDeJuegoReal) - 26 * enemyManager.quantityEnemiesDestroyed).ToString();
         PlayerPrefs.SetString("score", score);
         PlayerPrefs.Save();
+    }
+
+    public void AddToScore(int scorePoints)
+    {
+        score += (int)(scorePoints * multiplier);
+        uIController.SetScoreSilently(score);
+    }
+
+    public void AddToMultiplier(float multiplierBonus)
+    {
+        multiplier += Mathf.Ceil(multiplierBonus);
+        uIController.IncreaseMultiplier(multiplier);
     }
 }
 

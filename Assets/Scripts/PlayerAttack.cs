@@ -26,6 +26,8 @@ public class PlayerAttack : MonoBehaviour
 
     private HatHolder _hatHolder;
 
+    private GameManager _gameManager;
+
     private void Awake()
     {
         _playerActions = new PlayerInputActions();
@@ -33,6 +35,7 @@ public class PlayerAttack : MonoBehaviour
         _cam = FindObjectOfType<Camera>();
         _uiController = FindObjectOfType<UIController>();
         _hatHolder = GetComponentInChildren<HatHolder>();
+        _gameManager = FindObjectOfType<GameManager>();
     }
 
 
@@ -82,6 +85,8 @@ public class PlayerAttack : MonoBehaviour
 
         if (other.gameObject.CompareTag("Stall") && _secure.IsPressed() && !isSecuring)
         {
+            Debug.Log("In contact with stall");
+
             isSecuring = true;
             secure = StartCoroutine(Secure());
         }
@@ -124,14 +129,23 @@ public class PlayerAttack : MonoBehaviour
 
     private IEnumerator Secure()
     {
+        if (!_hatHolder.HasHat())
+        {
+            isSecuring = false;
+            yield break;
+        }
         Debug.Log("Securing hat");
         yield return new WaitForSeconds(timeBetweenSecures);
         Debug.Log("Hat Secured");
         lastSecureTime = Time.fixedTime;
-        //GameObject hat = other. <HatWielder>().GetStealed();
+        HatController hat = _hatHolder.RemoveHat().GetComponent<HatController>();
+        _gameManager.AddToMultiplier(hat.multiplierBonus);
+        _gameManager.AddToScore(hat.scorePoints);
+        Destroy(hat.gameObject);
+
         //hatsInPossesions.Add(hat);
         //UIController.AddToMultiplier(hat.getMultiplier());
-        _secure.Reset();
+        //_secure.Reset();
         isSecuring = false;
     }
 
