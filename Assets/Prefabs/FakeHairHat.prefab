@@ -99,4 +99,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   multiplierBonus: 0.6
   scorePoints: 320
-  spawnPriority: 1
+  spawnPriority: 12
