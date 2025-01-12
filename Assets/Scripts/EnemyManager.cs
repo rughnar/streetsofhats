@@ -1,10 +1,12 @@
 
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class EnemyManager : MonoBehaviour
 {
-    public List<int> enemiesQuantityToSpawn;
+    public List<int> enemiesPriority;
+    //public List<float> enemiesQuantity;
     [SerializeField] private List<GameObject> enemyPrefabs;
     [SerializeField] private List<Transform> spawnPoints;
 
@@ -17,21 +19,21 @@ public class EnemyManager : MonoBehaviour
     private List<int> currentSpawnedEnemies;
     private int totalEnemiesToSpawn = 0;
 
-
+    System.Random rnd = new System.Random();
     void Awake()
     {
         gameManager = FindObjectOfType<GameManager>();
         lastEnemySpawnTime = 0f;
         Spawn(1);
         currentSpawnedEnemies = new List<int>();
-        if (enemiesQuantityToSpawn != null)
+        /*if (enemiesQuantity != null)
         {
-            foreach (int enemyQuantity in enemiesQuantityToSpawn)
+            foreach (int enemyQuantity in enemiesQuantity)
             {
                 totalEnemiesToSpawn += enemyQuantity;
                 currentSpawnedEnemies.Add(0);
             }
-        }
+        }*/
 
     }
 
@@ -67,24 +69,43 @@ public class EnemyManager : MonoBehaviour
 
     private void SpawnRandomEnemy()
     {
-        int index = Mathf.Abs(Random.Range(0, enemyPrefabs.Count));
-        GameObject enemy = Instantiate(enemyPrefabs[index], spawnPoints[Random.Range(0, spawnPoints.Count)].position, Quaternion.identity);
+
+        //int index = Mathf.Abs(Random.Range(0, enemyPrefabs.Count));
+        GameObject enemy = Instantiate(GetObjectWithMaxProb(), spawnPoints[Random.Range(0, spawnPoints.Count)].position, Quaternion.identity);
         enemy.GetComponent<EnemyController>().FaceCenter();
     }
-
-    private void SpawnRandomEnemyRecursively(int minusIndex)
+    /*
+        private void SpawnRandomEnemyRecursively(int minusIndex)
+        {
+            int index = Mathf.Abs(Random.Range(minusIndex, enemyPrefabs.Count));
+            if (currentSpawnedEnemies[index] < enemiesQuantity[index])
+            {
+                GameObject enemy = Instantiate(enemyPrefabs[index], spawnPoints[Random.Range(0, spawnPoints.Count)].position, Quaternion.identity);
+                enemy.GetComponent<EnemyController>().FaceCenter();
+                currentSpawnedEnemies[index] += 1;
+            }
+            else
+            {
+                SpawnRandomEnemyRecursively(minusIndex - 1);
+            }
+        }
+    */
+    GameObject GetObjectWithMaxProb()
     {
-        int index = Mathf.Abs(Random.Range(minusIndex, enemyPrefabs.Count));
-        if (currentSpawnedEnemies[index] < enemiesQuantityToSpawn[index])
+        int totalWeight = enemiesPriority.Sum(); // Using LINQ for suming up all the values
+        int randomNumber = rnd.Next(0, totalWeight);
+
+        GameObject myGameObject = null;
+        for (int i = 0; i < enemyPrefabs.Count; i++)
         {
-            GameObject enemy = Instantiate(enemyPrefabs[index], spawnPoints[Random.Range(0, spawnPoints.Count)].position, Quaternion.identity);
-            enemy.GetComponent<EnemyController>().FaceCenter();
-            currentSpawnedEnemies[index] += 1;
+            if (randomNumber < enemiesPriority[i])
+            {
+                myGameObject = enemyPrefabs[i];
+                break;
+            }
+            randomNumber -= enemiesPriority[i];
         }
-        else
-        {
-            SpawnRandomEnemyRecursively(minusIndex - 1);
-        }
+        return myGameObject;
     }
 
 }
