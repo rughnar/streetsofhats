@@ -45,4 +45,13 @@ public class HatHolder : MonoBehaviour
     {
         return hats.Count;
     }
+
+    public void RemoveAll()
+    {
+        foreach (HatController hat in hats)
+        {
+            Destroy(hat.gameObject);
+        }
+        hats.Clear();
+    }
 }

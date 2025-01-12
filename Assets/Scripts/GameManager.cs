@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
 
     private EnemyManager enemyManager;
     private PlayerMovement playerMovement;
-    private PlayerAttack playerAttack;
+    private PlayerController playerController;
     private UIController uIController;
 
 
@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour
     {
         enemyManager = FindObjectOfType<EnemyManager>();
         playerMovement = FindObjectOfType<PlayerMovement>();
-        playerAttack = FindObjectOfType<PlayerAttack>();
+        playerController = FindObjectOfType<PlayerController>();
         uIController = FindObjectOfType<UIController>();
     }
 
@@ -117,7 +117,7 @@ public class GameManager : MonoBehaviour
         pauseScreen.SetActive(true);
         gamePaused = true;
         playerMovement.enabled = false;
-        playerAttack.enabled = false;
+        playerController.enabled = false;
     }
 
     public void Resume()
@@ -126,7 +126,7 @@ public class GameManager : MonoBehaviour
         pauseScreen.SetActive(false);
         gamePaused = false;
         playerMovement.enabled = true;
-        playerAttack.enabled = true;
+        playerController.enabled = true;
     }
 
     public void BackToMainMenu() { SceneManager.LoadScene(0); }
@@ -153,6 +153,12 @@ public class GameManager : MonoBehaviour
         multiplier += multiplierBonus;
         multiplier = Mathf.Round(multiplier * 10f) / 10f;
         uIController.IncreaseMultiplier(multiplier);
+    }
+
+    public void ReduceMultiplierTo1()
+    {
+        multiplier = 1;
+        uIController.IncreaseMultiplier(1);
     }
 }
 

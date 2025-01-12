@@ -1,32 +1,213 @@
-using System.Collections;
-using System.Collections.Generic;
+using UnityEngine.InputSystem;
 using UnityEngine;
+using System.Collections;
+using UnityEngine.Rendering;
+using System.Collections.Generic;
+using System;
 
 public class PlayerController : MonoBehaviour
 {
+    public AudioClip stealClip;
+    public AudioClip secureClip;
+    public float timeBetweenSteals = 0.3f;
+    public float timeBetweenSecures = 0.3f;
+    public Collider2D presence;
+    private PlayerInputActions _playerActions;
+    private InputAction _steal;
+    private InputAction _secure;
+    private AudioManager _audioManager;
+    private Camera _cam;
+    private UIController _uiController;
+    private float lastStealTime = 0f;
+    private Coroutine steal;
+    private Coroutine secure;
 
-    public AudioClip hurt;
+    private bool isStealing = false;
+    private bool isSecuring = false;
 
-    [SerializeField] private float _hp = 100;
+    private HatHolder _hatHolder;
 
-    private AudioManager audioManager;
-    private GameManager gameManager;
+    private GameManager _gameManager;
+    private bool inContactWithStall = false;
 
-    void Awake()
+    private PlayerHPController _playerHPController;
+    private PlayerMovement _playerMovement;
+
+
+    private void Awake()
     {
-        gameManager = FindObjectOfType<GameManager>();
-        audioManager = FindObjectOfType<AudioManager>();
+        _playerActions = new PlayerInputActions();
+        _audioManager = FindObjectOfType<AudioManager>();
+        _cam = FindObjectOfType<Camera>();
+        _uiController = FindObjectOfType<UIController>();
+        _hatHolder = GetComponentInChildren<HatHolder>();
+        _gameManager = FindObjectOfType<GameManager>();
+        _playerHPController = GetComponent<PlayerHPController>();
+        _playerMovement = GetComponent<PlayerMovement>();
     }
 
-    public void ReduceHealth(float hp)
+
+    private void OnEnable()
     {
-        _hp -= hp;
-        audioManager.PlaySFX(hurt);
-        if (_hp <= 0)
+        _steal = _playerActions.Player.Fire;
+        _steal.Enable();
+        //_steal.performed += Steal;
+
+        _secure = _playerActions.Player.Fire2;
+        _secure.Enable();
+    }
+
+    private void OnDisable()
+    {
+        _steal.Disable();
+        _secure.Disable();
+    }
+
+
+    void Update()
+    {
+        if (isStealing && _steal.WasReleasedThisFrame())
         {
-            gameManager.EndLevel();
+            StopCoroutine(steal);
+            isStealing = false;
+        }
+        if (isSecuring && _secure.WasReleasedThisFrame())
+        {
+            StopCoroutine(secure);
+            isSecuring = false;
+        }
+
+        if (inContactWithStall && _secure.IsPressed() && !isSecuring)
+        {
+            Debug.Log("In contact with stall");
+            isSecuring = true;
+            secure = StartCoroutine(Secure());
         }
     }
 
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("HatStall"))
+        {
+            inContactWithStall = true;
+        }
+    }
+    void OnTriggerStay2D(Collider2D other)
+    {
+        if (_steal.IsPressed())
+        {
+            Debug.Log("In contact");
+            if (other.gameObject.CompareTag("HatWielder") && !isStealing)
+            {
+                isStealing = true;
+                steal = StartCoroutine(Steal(other.gameObject));
+                presence.enabled = true;
+                Debug.Log("Presence enabled 1");
 
+            }
+        }
+
+        if (other.gameObject.CompareTag("Bush"))
+        {
+            Debug.Log("Presence disabled 1");
+            presence.enabled = false;
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D other)
+    {
+        if (isStealing && other.gameObject.CompareTag("HatWielder"))
+        {
+            StopCoroutine(steal);
+            Debug.Log("Stealing interrupted");
+            isStealing = false;
+        }
+
+        if (other.gameObject.CompareTag("HatStall"))
+        {
+            if (isSecuring)
+            {
+                StopCoroutine(secure);
+                Debug.Log("Securing interrupted");
+                isSecuring = false;
+            }
+            inContactWithStall = false;
+        }
+
+        if (other.gameObject.CompareTag("Bush"))
+        {
+            presence.enabled = true;
+            Debug.Log("Presence enabled 2");
+
+        }
+    }
+
+    private IEnumerator Steal(GameObject gameObject)
+    {
+        EnemyController enemyController = gameObject.GetComponent<EnemyController>();
+        if (!enemyController.HasHat())
+        {
+            isStealing = false;
+            yield break;
+        }
+        Debug.Log("Stealing hat");
+        yield return new WaitForSeconds(timeBetweenSteals);
+        Debug.Log("Hat Stolen");
+        GameObject hat = enemyController.GetStealed();
+        _hatHolder.AddHat(hat);
+        //UIController.AddToMultiplier(hat.getMultiplier());
+        _steal.Reset();
+        lastStealTime = Time.fixedTime;
+        isStealing = false;
+    }
+
+    private IEnumerator Secure()
+    {
+        if (!_hatHolder.HasHat())
+        {
+            isSecuring = false;
+            yield break;
+        }
+        Debug.Log("Securing hat");
+        yield return new WaitForSeconds(timeBetweenSecures);
+        Debug.Log("Hat Secured");
+        //lastSecureTime = Time.fixedTime;
+        HatController hat = _hatHolder.RemoveHat().GetComponent<HatController>();
+        _gameManager.AddToMultiplier(hat.multiplierBonus);
+        _gameManager.AddToScore(hat.scorePoints);
+        Destroy(hat.gameObject);
+
+        //hatsInPossesions.Add(hat);
+        //UIController.AddToMultiplier(hat.getMultiplier());
+        //_secure.Reset();
+        isSecuring = false;
+    }
+
+
+    public Boolean HasMoreThanOneHat()
+    {
+        return _hatHolder.CountHats() > 1;
+    }
+    public bool Stealing()
+    {
+        return isStealing;
+    }
+
+
+
+    public void GetArrested(int hp)
+    {
+        _hatHolder.RemoveAll();
+        _playerHPController.restarVida(hp);
+        _gameManager.ReduceMultiplierTo1();
+        StartCoroutine(RecoveringFromArrest());
+    }
+
+    private IEnumerator RecoveringFromArrest()
+    {
+        _playerMovement.enabled = false;
+        yield return new WaitForSeconds(1f);
+        _playerMovement.enabled = true;
+
+    }
 }

@@ -24,7 +24,7 @@ public class UIController : MonoBehaviour
 
     public void SetLivesSilently(int lives)
     {
-        livesText.text = "" + lives;
+        livesText.text = "Lives: " + lives;
     }
 
     public void IncreaseLives(int lives)

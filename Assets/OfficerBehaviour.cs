@@ -7,15 +7,16 @@ public class OfficerBehaviour : MonoBehaviour
 {
     public float arrestSpeed = 10f;
     private EnemyController enemyController;
-    private PlayerAttack playerAttack;
+    private PlayerController playerController;
     private Boolean playerOnSight = false;
     private Boolean playerStole = false;
-
     private Boolean proceedToArrest = false;
+
+    private Boolean arresting = false;
 
     void Awake()
     {
-        playerAttack = FindObjectOfType<PlayerAttack>();
+        playerController = FindObjectOfType<PlayerController>();
         enemyController = GetComponent<EnemyController>();
     }
 
@@ -56,8 +57,8 @@ public class OfficerBehaviour : MonoBehaviour
     void Update()
     {
         Debug.Log("Player On Sight? " + playerOnSight);
-        Debug.Log("Ïs Player stealing? " + playerAttack.Stealing());
-        if (playerOnSight && (playerAttack.Stealing() || playerAttack.HasMoreThanOneHat()))
+        Debug.Log("Ïs Player stealing? " + playerController.Stealing());
+        if (playerOnSight && (playerController.Stealing() || playerController.HasMoreThanOneHat()))
         {
             playerStole = true;
             proceedToArrest = true;
@@ -69,7 +70,7 @@ public class OfficerBehaviour : MonoBehaviour
     private void ArrestPlayer()
     {
         enemyController.ToggleMoveNormally();
-        Transform tf = playerAttack.gameObject.transform;
+        Transform tf = playerController.gameObject.transform;
         float distance = Vector2.Distance(transform.position, tf.position);
 
         // Verifica si el jugador está dentro del rango de persecución
@@ -77,5 +78,22 @@ public class OfficerBehaviour : MonoBehaviour
         // Mueve al enemigo hacia el jugador
         Vector2 direction = (tf.position - transform.position).normalized;
         transform.position = Vector2.MoveTowards(transform.position, tf.position, arrestSpeed * Time.deltaTime);
+
+        if (distance < 1 && !arresting)
+        {
+            StartCoroutine(Arresting());
+        }
+    }
+
+    private IEnumerator Arresting()
+    {
+        arresting = true;
+        yield return new WaitForSeconds(1f);
+        playerController.GetArrested(1);
+        playerStole = false;
+        proceedToArrest = false;
+        arresting = false;
+        enemyController.ToggleMoveNormally();
+
     }
 }
