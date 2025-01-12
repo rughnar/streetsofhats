@@ -17,12 +17,13 @@ public class HatHolder : MonoBehaviour
         foreach (HatController hc in hatControllers)
         {
             hats.Push(hc);
+            Debug.Log(hats.Count());
         }
     }
 
     public GameObject RemoveHat()
     {
-        if (hats.Count > 0)
+        if (hats.Count > 1)
         {
             return hats.Pop().gameObject;
         }
@@ -32,7 +33,12 @@ public class HatHolder : MonoBehaviour
     public void AddHat(GameObject hat)
     {
         hat.transform.SetParent(this.gameObject.transform);
-        hat.transform.localPosition = new Vector3(0f, hats.Count() * 0.3f);
+        hat.transform.localPosition = new Vector3(0f, hats.Count() * 0.2f);
         hats.Push(hat.GetComponent<HatController>());
+    }
+
+    public Boolean HasHat()
+    {
+        return hats.Count > 1;
     }
 }

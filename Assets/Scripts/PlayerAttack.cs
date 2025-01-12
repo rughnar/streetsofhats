@@ -105,10 +105,16 @@ public class PlayerAttack : MonoBehaviour
 
     private IEnumerator Steal(GameObject gameObject)
     {
+        EnemyController enemyController = gameObject.GetComponent<EnemyController>();
+        if (!enemyController.HasHat())
+        {
+            isStealing = false;
+            yield break;
+        }
         Debug.Log("Stealing hat");
         yield return new WaitForSeconds(timeBetweenSteals);
         Debug.Log("Hat Stolen");
-        GameObject hat = gameObject.GetComponent<EnemyController>().GetStealed();
+        GameObject hat = enemyController.GetStealed();
         _hatHolder.AddHat(hat);
         //UIController.AddToMultiplier(hat.getMultiplier());
         _steal.Reset();

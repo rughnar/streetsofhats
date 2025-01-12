@@ -72,4 +72,9 @@ public class EnemyController : MonoBehaviour
     {
         return _hatHolder.RemoveHat();
     }
+
+    public bool HasHat()
+    {
+        return _hatHolder.HasHat();
+    }
 }
