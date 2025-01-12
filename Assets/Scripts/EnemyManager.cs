@@ -7,7 +7,8 @@ public class EnemyManager : MonoBehaviour
     public List<int> enemiesQuantityToSpawn;
     [SerializeField] private List<GameObject> enemyPrefabs;
     [SerializeField] private List<Transform> spawnPoints;
-    [SerializeField] private int maxEnemiesAtTheSameTime = 999;
+
+    //[SerializeField] private int maxEnemiesAtTheSameTime = 999;
     [SerializeField] private float timeBetweenSpawns = 4f;
     private GameManager gameManager;
     private int currentEnemiesOnLevel = 0;
@@ -46,11 +47,11 @@ public class EnemyManager : MonoBehaviour
     void Spawn(int quantity)
     {
         //&& currentEnemiesOnLevel < maxEnemiesAtTheSameTime
-        if (quantityEnemiesDestroyed + currentEnemiesOnLevel < totalEnemiesToSpawn)
-        {
-            SpawnRandomEnemyRecursively(0);
-            currentEnemiesOnLevel++;
-        }
+        //if (quantityEnemiesDestroyed + currentEnemiesOnLevel < totalEnemiesToSpawn)
+
+        SpawnRandomEnemy();
+        //currentEnemiesOnLevel++;
+
     }
 
     public void EnemyTakenDown()
@@ -64,12 +65,20 @@ public class EnemyManager : MonoBehaviour
     }
 
 
+    private void SpawnRandomEnemy()
+    {
+        int index = Mathf.Abs(Random.Range(0, enemyPrefabs.Count));
+        GameObject enemy = Instantiate(enemyPrefabs[index], spawnPoints[Random.Range(0, spawnPoints.Count)].position, Quaternion.identity);
+        enemy.GetComponent<EnemyController>().FaceCenter();
+    }
+
     private void SpawnRandomEnemyRecursively(int minusIndex)
     {
         int index = Mathf.Abs(Random.Range(minusIndex, enemyPrefabs.Count));
         if (currentSpawnedEnemies[index] < enemiesQuantityToSpawn[index])
         {
-            Instantiate(enemyPrefabs[index], spawnPoints[Random.Range(0, spawnPoints.Count)].position, Quaternion.identity);
+            GameObject enemy = Instantiate(enemyPrefabs[index], spawnPoints[Random.Range(0, spawnPoints.Count)].position, Quaternion.identity);
+            enemy.GetComponent<EnemyController>().FaceCenter();
             currentSpawnedEnemies[index] += 1;
         }
         else

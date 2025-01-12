@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.Assertions.Must;
 
 public class EnemyController : MonoBehaviour
 {
@@ -76,5 +77,11 @@ public class EnemyController : MonoBehaviour
     public bool HasHat()
     {
         return _hatHolder.HasHat();
+    }
+
+    public void FaceCenter()
+    {
+        if (transform.position.x >= 0) _spriteRenderer.flipX = true;
+        else _spriteRenderer.flipX = false;
     }
 }
