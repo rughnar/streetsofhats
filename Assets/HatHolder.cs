@@ -7,11 +7,14 @@ using UnityEngine;
 
 public class HatHolder : MonoBehaviour
 {
-    Stack<HatController> hats;
+    public SpriteRenderer characterSpriteRenderer;
 
+    Stack<HatController> hats;
+    private Boolean flippedHats = false;
 
     void Awake()
     {
+        characterSpriteRenderer = GetComponentInParent<SpriteRenderer>();
         Array hatControllers = GetComponentsInChildren<HatController>();
         hats = new Stack<HatController>();
         foreach (HatController hc in hatControllers)
@@ -53,5 +56,18 @@ public class HatHolder : MonoBehaviour
             Destroy(hat.gameObject);
         }
         hats.Clear();
+    }
+
+
+    void FixedUpdate()
+    {
+        if (characterSpriteRenderer.flipX != flippedHats)
+        {
+            flippedHats = characterSpriteRenderer.flipX;
+            foreach (HatController hat in hats)
+            {
+                hat.gameObject.GetComponent<SpriteRenderer>().flipX = characterSpriteRenderer.flipX;
+            }
+        }
     }
 }

@@ -6,18 +6,23 @@ using UnityEngine;
 public class OfficerBehaviour : MonoBehaviour
 {
     public float arrestSpeed = 10f;
+    public Collider2D range;
+
     private EnemyController enemyController;
     private PlayerController playerController;
     private Boolean playerOnSight = false;
     private Boolean playerStole = false;
     private Boolean proceedToArrest = false;
-
     private Boolean arresting = false;
+    private SpriteRenderer enemySpriteRenderer;
+
+    private bool flippedRange = false;
 
     void Awake()
     {
         playerController = FindObjectOfType<PlayerController>();
         enemyController = GetComponent<EnemyController>();
+        enemySpriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -94,6 +99,14 @@ public class OfficerBehaviour : MonoBehaviour
         proceedToArrest = false;
         arresting = false;
         enemyController.MoveNormally(true);
+    }
 
+    void FixedUpdate()
+    {
+        if (enemySpriteRenderer.flipX != flippedRange)
+        {
+            flippedRange = enemySpriteRenderer.flipX;
+            range.offset = range.offset * -1;
+        }
     }
 }

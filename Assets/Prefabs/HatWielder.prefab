@@ -252,6 +252,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c82c747a8b8fbee489e48b9d3612e0d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  characterSpriteRenderer: {fileID: 5823014836361573803}
 --- !u!4 &6306216094828233459 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3459642761345144090, guid: 155d6338ec68bf9479a70a189bff9459, type: 3}
