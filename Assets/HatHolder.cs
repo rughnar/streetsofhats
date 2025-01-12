@@ -40,4 +40,9 @@ public class HatHolder : MonoBehaviour
     {
         return hats.Count > 0;
     }
+
+    public int CountHats()
+    {
+        return hats.Count;
+    }
 }

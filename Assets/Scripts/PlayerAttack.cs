@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.Rendering;
 using System.Collections.Generic;
+using System;
 
 public class PlayerAttack : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class PlayerAttack : MonoBehaviour
     public AudioClip secureClip;
     public float timeBetweenSteals = 0.3f;
     public float timeBetweenSecures = 0.3f;
+    public Collider2D presence;
     private PlayerInputActions _playerActions;
     private InputAction _steal;
     private InputAction _secure;
@@ -94,8 +96,16 @@ public class PlayerAttack : MonoBehaviour
             {
                 isStealing = true;
                 steal = StartCoroutine(Steal(other.gameObject));
+                presence.enabled = true;
+                Debug.Log("Presence enabled 1");
 
             }
+        }
+
+        if (other.gameObject.CompareTag("Bush"))
+        {
+            Debug.Log("Presence disabled 1");
+            presence.enabled = false;
         }
     }
 
@@ -119,6 +129,12 @@ public class PlayerAttack : MonoBehaviour
             inContactWithStall = false;
         }
 
+        if (other.gameObject.CompareTag("Bush"))
+        {
+            presence.enabled = true;
+            Debug.Log("Presence enabled 2");
+
+        }
     }
 
     private IEnumerator Steal(GameObject gameObject)
@@ -163,4 +179,17 @@ public class PlayerAttack : MonoBehaviour
     }
 
 
+    public Boolean HasMoreThanOneHat()
+    {
+        return _hatHolder.CountHats() > 1;
+    }
+    public bool Stealing()
+    {
+        return isStealing;
+    }
+
+    private void HideOnBush()
+    {
+
+    }
 }

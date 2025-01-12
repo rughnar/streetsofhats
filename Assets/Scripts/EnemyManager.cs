@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-using System.Diagnostics.Tracing;
+using System;
 
 public class EnemyManager : MonoBehaviour
 {
@@ -10,7 +10,7 @@ public class EnemyManager : MonoBehaviour
     //public List<float> enemiesQuantity;
     [SerializeField] private List<GameObject> enemyPrefabs;
     [SerializeField] private List<Transform> spawnPoints;
-
+    [SerializeField] private List<Sprite> enemySprites;
     [SerializeField] private List<HatController> hats;
     //[SerializeField] private int maxEnemiesAtTheSameTime = 999;
     [SerializeField] private float timeBetweenSpawns = 4f;
@@ -74,7 +74,7 @@ public class EnemyManager : MonoBehaviour
     {
 
         //int index = Mathf.Abs(Random.Range(0, enemyPrefabs.Count));
-        GameObject enemy = Instantiate(GetObjectWithMaxProb(), spawnPoints[Random.Range(0, spawnPoints.Count)].position, Quaternion.identity);
+        GameObject enemy = Instantiate(GetObjectWithMaxProb(), spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Count)].position, Quaternion.identity);
         enemy.GetComponent<EnemyController>().FaceCenter();
         if (enemy.CompareTag("HatWielder"))
         {
@@ -84,6 +84,8 @@ public class EnemyManager : MonoBehaviour
                 GameObject hat2 = Instantiate(hat, Vector3.zero, Quaternion.identity);
                 enemy.GetComponentInChildren<HatHolder>().AddHat(hat2);
             }
+            enemy.GetComponent<SpriteRenderer>().sprite = enemySprites[UnityEngine.Random.Range(0, enemySprites.Count)];
+
         }
     }
     /*

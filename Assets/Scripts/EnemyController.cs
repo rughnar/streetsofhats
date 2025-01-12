@@ -14,6 +14,8 @@ public class EnemyController : MonoBehaviour
     private EnemyManager _enemyManager;
     private SpriteRenderer _spriteRenderer;
     private int flipX;
+
+    private bool moveNormally = true;
     void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
@@ -25,8 +27,11 @@ public class EnemyController : MonoBehaviour
 
     void FixedUpdate()
     {
-        flipX = _spriteRenderer.flipX ? -1 : 1;
-        _rb.MovePosition(new Vector2(_rb.position.x + velocity * 0.01f * flipX, _rb.position.y));
+        if (moveNormally)
+        {
+            flipX = _spriteRenderer.flipX ? -1 : 1;
+            _rb.MovePosition(new Vector2(_rb.position.x + velocity * 0.01f * flipX, _rb.position.y));
+        }
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -83,5 +88,11 @@ public class EnemyController : MonoBehaviour
     {
         if (transform.position.x >= 0) _spriteRenderer.flipX = true;
         else _spriteRenderer.flipX = false;
+    }
+
+    public void ToggleMoveNormally()
+    {
+        if (moveNormally) moveNormally = false;
+        else moveNormally = true;
     }
 }
