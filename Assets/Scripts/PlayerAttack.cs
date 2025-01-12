@@ -27,6 +27,7 @@ public class PlayerAttack : MonoBehaviour
     private HatHolder _hatHolder;
 
     private GameManager _gameManager;
+    private bool inContactWithStall = false;
 
     private void Awake()
     {
@@ -68,6 +69,21 @@ public class PlayerAttack : MonoBehaviour
             StopCoroutine(secure);
             isSecuring = false;
         }
+
+        if (inContactWithStall && _secure.IsPressed() && !isSecuring)
+        {
+            Debug.Log("In contact with stall");
+            isSecuring = true;
+            secure = StartCoroutine(Secure());
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("Stall"))
+        {
+            inContactWithStall = true;
+        }
     }
     void OnTriggerStay2D(Collider2D other)
     {
@@ -81,15 +97,6 @@ public class PlayerAttack : MonoBehaviour
 
             }
         }
-
-
-        if (other.gameObject.CompareTag("Stall") && _secure.IsPressed() && !isSecuring)
-        {
-            Debug.Log("In contact with stall");
-
-            isSecuring = true;
-            secure = StartCoroutine(Secure());
-        }
     }
 
     void OnTriggerExit2D(Collider2D other)
@@ -100,12 +107,18 @@ public class PlayerAttack : MonoBehaviour
             Debug.Log("Stealing interrupted");
             isStealing = false;
         }
-        if (isSecuring && other.gameObject.CompareTag("Stall"))
+
+        if (other.gameObject.CompareTag("Stall"))
         {
-            StopCoroutine(secure);
-            Debug.Log("Securing interrupted");
-            isSecuring = false;
+            if (isSecuring)
+            {
+                StopCoroutine(secure);
+                Debug.Log("Securing interrupted");
+                isSecuring = false;
+            }
+            inContactWithStall = false;
         }
+
     }
 
     private IEnumerator Steal(GameObject gameObject)
@@ -137,7 +150,7 @@ public class PlayerAttack : MonoBehaviour
         Debug.Log("Securing hat");
         yield return new WaitForSeconds(timeBetweenSecures);
         Debug.Log("Hat Secured");
-        lastSecureTime = Time.fixedTime;
+        //lastSecureTime = Time.fixedTime;
         HatController hat = _hatHolder.RemoveHat().GetComponent<HatController>();
         _gameManager.AddToMultiplier(hat.multiplierBonus);
         _gameManager.AddToScore(hat.scorePoints);

@@ -154,7 +154,8 @@ public class GameManager : MonoBehaviour
 
     public void AddToMultiplier(float multiplierBonus)
     {
-        multiplier += Mathf.Ceil(multiplierBonus);
+        multiplier += multiplierBonus;
+        multiplier = Mathf.Round(multiplier * 10f) / 10f;
         uIController.IncreaseMultiplier(multiplier);
     }
 }
