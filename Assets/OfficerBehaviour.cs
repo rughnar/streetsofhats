@@ -25,9 +25,9 @@ public class OfficerBehaviour : MonoBehaviour
         if (other.gameObject.CompareTag("PlayerPresence"))
         {
             playerOnSight = true;
-            if (playerStole)
+            if (playerStole && !proceedToArrest && !arresting)
             {
-                enemyController.ToggleMoveNormally();
+                enemyController.MoveNormally(false);
                 proceedToArrest = true;
             }
 
@@ -47,7 +47,7 @@ public class OfficerBehaviour : MonoBehaviour
             playerOnSight = false;
             if (playerStole)
             {
-                enemyController.ToggleMoveNormally();
+                enemyController.MoveNormally(true);
                 proceedToArrest = false;
             }
 
@@ -69,7 +69,7 @@ public class OfficerBehaviour : MonoBehaviour
 
     private void ArrestPlayer()
     {
-        enemyController.ToggleMoveNormally();
+        enemyController.MoveNormally(false);
         Transform tf = playerController.gameObject.transform;
         float distance = Vector2.Distance(transform.position, tf.position);
 
@@ -88,12 +88,12 @@ public class OfficerBehaviour : MonoBehaviour
     private IEnumerator Arresting()
     {
         arresting = true;
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.2f);
         playerController.GetArrested(1);
         playerStole = false;
         proceedToArrest = false;
         arresting = false;
-        enemyController.ToggleMoveNormally();
+        enemyController.MoveNormally(true);
 
     }
 }

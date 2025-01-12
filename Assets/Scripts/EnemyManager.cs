@@ -73,20 +73,24 @@ public class EnemyManager : MonoBehaviour
     private void SpawnRandomEnemy()
     {
 
-        //int index = Mathf.Abs(Random.Range(0, enemyPrefabs.Count));
         GameObject enemy = Instantiate(GetObjectWithMaxProb(), spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Count)].position, Quaternion.identity);
         enemy.GetComponent<EnemyController>().FaceCenter();
         if (enemy.CompareTag("HatWielder"))
         {
-            GameObject hat = GetHatWithMaxProb();
-            if (hat != null)
-            {
-                GameObject hat2 = Instantiate(hat, Vector3.zero, Quaternion.identity);
-                enemy.GetComponentInChildren<HatHolder>().AddHat(hat2);
-            }
             enemy.GetComponent<SpriteRenderer>().sprite = enemySprites[UnityEngine.Random.Range(0, enemySprites.Count)];
-
+            if (UnityEngine.Random.Range(0, 10) > 3)
+            {
+                GameObject hat = GetHatWithMaxProb();
+                if (hat != null)
+                {
+                    GameObject hat2 = Instantiate(hat, Vector3.zero, Quaternion.identity);
+                    enemy.GetComponentInChildren<HatHolder>().AddHat(hat2);
+                }
+            }
         }
+
+        //int index = Mathf.Abs(Random.Range(0, enemyPrefabs.Count));
+
     }
     /*
         private void SpawnRandomEnemyRecursively(int minusIndex)

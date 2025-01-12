@@ -152,6 +152,7 @@ public class PlayerController : MonoBehaviour
         }
         Debug.Log("Stealing hat");
         yield return new WaitForSeconds(timeBetweenSteals);
+        _audioManager.PlaySFX(stealClip);
         Debug.Log("Hat Stolen");
         GameObject hat = enemyController.GetStealed();
         _hatHolder.AddHat(hat);
@@ -171,15 +172,11 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Securing hat");
         yield return new WaitForSeconds(timeBetweenSecures);
         Debug.Log("Hat Secured");
-        //lastSecureTime = Time.fixedTime;
+        _audioManager.PlaySFX(secureClip);
         HatController hat = _hatHolder.RemoveHat().GetComponent<HatController>();
         _gameManager.AddToMultiplier(hat.multiplierBonus);
         _gameManager.AddToScore(hat.scorePoints);
         Destroy(hat.gameObject);
-
-        //hatsInPossesions.Add(hat);
-        //UIController.AddToMultiplier(hat.getMultiplier());
-        //_secure.Reset();
         isSecuring = false;
     }
 

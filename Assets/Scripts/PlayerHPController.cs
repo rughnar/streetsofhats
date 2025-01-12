@@ -21,6 +21,7 @@ public class PlayerHPController : MonoBehaviour
         audioManager = FindObjectOfType<AudioManager>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         boxCollider2D = GetComponent<BoxCollider2D>();
+        _gameManager = FindObjectOfType<GameManager>();
     }
 
     public int GetVida()

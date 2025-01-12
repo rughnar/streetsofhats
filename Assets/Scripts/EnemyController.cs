@@ -90,6 +90,11 @@ public class EnemyController : MonoBehaviour
         else _spriteRenderer.flipX = false;
     }
 
+
+    public void MoveNormally(bool state)
+    {
+        moveNormally = state;
+    }
     public void ToggleMoveNormally()
     {
         if (moveNormally) moveNormally = false;
